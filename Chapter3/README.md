@@ -8,7 +8,7 @@ You can install k8s on laptop, organization infra, or virtual machine from cloud
 ### 3.1.1
 You can start by just using docker desktop to run a single node k8s. Easiest way to start.
 
-This is how the docker desktop runs kubernetes cluster.
+This is how the docker desktop runs kubernetes cluster.   
 
 ![kub in docker desktop](images/DDkube.png)
 
@@ -29,7 +29,7 @@ Now you can try using [ps aux] to see the running container
 You can also use Minikube.
 This deploy the newer version of Kubernetes than the DD.
 - single node
-- suitable for testing and developong locally.
+- suitable for testing and developong locally.   
 
 You can check the details from [Minikube repository](http://github.com/kubernetes/minikube)
 
@@ -55,7 +55,7 @@ To start You simply need
 minikube start
 ```
 
-Here is the picture of how Minikube run locally
+Here is the picture of how Minikube run locally   
 ![Minikube system visualization](images/minikube.png)
 
 ### 3.1.3 use *Kind*(Kubernetes in Docker) to run local cluster
