@@ -97,3 +97,7 @@ Now the show time Lets make our very first multi-node cluster
 ```sh
 $ kind create cluster --config kind-multi-node.yaml 
 ```
+Check the nodes list by _Kind get nodes_
+To Enter the cluster node _docker exec -it kind-control-plane bash_
+
+You can also create managed cluster with cloud services. However I will not write about them.
