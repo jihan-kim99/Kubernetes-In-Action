@@ -143,3 +143,45 @@ $ kubectl proxy
 The proxy runs in local as API server allows you to access the services through it.
 
 Now go to this [link to dashboard](http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/)
+
+You will see the authentication page run the following command to get the token
+```sh
+kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard 
+get secret | sls admin-user | ForEach-Object { $_ -Split '\s+' } | Select -First 1)
+```
+
+## 3.3 Running your first application on Kubernetes
+Finally, We deploy something to cluster. Normally with JSON or YAML but now let's do in easy way.
+
+The imperative way is `kubectl  create  deployment`, this creates _deployment_ object.
+
+Now let's try to deploy the Kiada we made in Chapter 2.
+
+```sh
+kubectl create deployment kiada --image=yourId/kiada:0.1
+deployment.apps/kiada created
+```
+- deployment: makes deployment
+- kiada: the object will be called kiada
+- image: choose the image
+
+Default you pull from docker but you can specify.
+
+After we use the command we created the deployments.   
+Try to run `kubectl get deployments`, You might notice this deploy is not yet ready to use.   
+Pods is not ready for the deploy. 
+
+To deploy this we need to know about pods.
+##### Pods
+Pods is group of containers that run together in same worker node share certain Linux namespaces.   
+![Containers < pods](images/container_in_pods.png)
+
+Each pod can think of as a computer. Has different Ip adress, hostname, processes, network interfaces and other resources. You can use `kubectl get pods` to know that we just have deployed a pods.   
+This pod is still in pending. Because worker node that has been assigned to must downlad the image before it can run it. When download is complete the pods will enter `Running` state.   
+###### just wait for it.   
+
+The inside of deployment is shown below.   
+
+![Deploy](images/deployLocal.png)   
+
+After running the kubectl create, will make a new Deploy object by sending the HTTP request to Kubernetes API server. The kubernetes will create new Pod then schedule to worker nodes. Kubelet will aware the new pod that assigned to this node, instructs docker to pull the specified image from registry.
