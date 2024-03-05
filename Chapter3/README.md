@@ -63,7 +63,7 @@ Here is the picture of how Minikube run locally
 Kind runs each cluster node inside a container. Instead of vm or host.
 This can create multi-node clusters
 
-Here is system outline
+Here is system outline   
 ![Kind outline](images/Kind.png)
 
 The process runs in container is running in the host OS. Using kind all Kubernetes components run in Host OS.
