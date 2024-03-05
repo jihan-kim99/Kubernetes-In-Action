@@ -1,7 +1,3 @@
----
-title: Deploy a app
----
-
 # chapter 3
 ## 3.1 Deploying kubernetes cluster
 Setting up a full-fledged, multi-node kubernetes ain't easy.
@@ -97,7 +93,53 @@ Now the show time Lets make our very first multi-node cluster
 ```sh
 $ kind create cluster --config kind-multi-node.yaml 
 ```
-Check the nodes list by _Kind get nodes_
-To Enter the cluster node _docker exec -it kind-control-plane bash_
+Check the nodes list by    _Kind get nodes_   
+To Enter the cluster node     _docker exec -it kind-control-plane bash_   
 
 You can also create managed cluster with cloud services. However I will not write about them.
+
+## 3.2 Interacting with Kubernetes
+
+### 3.2.1 setting up kubectl
+Now we learn how to use cluster. We need kubectl.
+This tool communicates with the Kubernetes API server - Kubernetes Control Plane.   
+
+![How kubectl and cluster interacts](images/kubectl.png)   
+
+We need to download kubectl [API link: change the version to get latest file](https://storage.googleapis.com/kubernetes-release/release/v1.29.2/bin/windows/amd64/kubectl.exe)
+
+after download Put in PATH.
+
+Kubectl give tab completion to not only command also to object! (wonderful)
+
+### 3.2.3  Using kubectl
+
+Now lets verify that my cluster is working
+```sh
+$ kubectl cluster-info
+Kubernetes control plane is running at https://127.0.0.1:56630
+CoreDNS is running at https://127.0.0.1:56630/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+```   
+Now we list the cluster nodes   
+```sh
+$ kubectl get nodes
+kind-control-plane   Ready    control-plane   19m   v1.29.2
+kind-worker          Ready    <none>          18m   v1.29.2
+kind-worker2         Ready    <none>          18m   v1.29.2
+```   
+Everything in Kubernetes is reprez as object and can be retrived or manipulated via RESTful API. `kubectl get` command retieves a list of objects from API.   
+You can also use `kubectl describe` to get more info.   
+
+### 3.2.4 Interact using web dashboards
+
+Kubernetes gives web dashboard. However this lacks of functionality and lags compare to `kubectl`
+
+In this book there will not use the dashboard but it will help the beginners cause it also teaches how to do the same action in kubectl.   
+```sh
+$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-rc5/aio/deploy/recommended.yaml
+$ kubectl proxy
+```
+
+The proxy runs in local as API server allows you to access the services through it.
+
+Now go to this [link to dashboard](http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/)
