@@ -151,6 +151,8 @@ get secret | sls admin-user | ForEach-Object { $_ -Split '\s+' } | Select -First
 ```
 
 ## 3.3 Running your first application on Kubernetes
+
+### 3.3.1 Running the first Kubernetes application
 Finally, We deploy something to cluster. Normally with JSON or YAML but now let's do in easy way.
 
 The imperative way is `kubectl  create  deployment`, this creates _deployment_ object.
@@ -185,3 +187,65 @@ The inside of deployment is shown below.
 ![Deploy](images/deployLocal.png)   
 
 After running the kubectl create, will make a new Deploy object by sending the HTTP request to Kubernetes API server. The kubernetes will create new Pod then schedule to worker nodes. Kubelet will aware the new pod that assigned to this node, instructs docker to pull the specified image from registry.
+
+### 3.3.2 Expose to the world
+
+First Easy way will be just using one line of code
+```sh
+$ kubectl expose deployment kiada --type=LoadBalancer --port 8080 
+service/kiada exposed
+```
+The Create deployment will make the object then expose will create Service object.   
+Let's break down
+- `expose` : I want to expose the kiada
+- `--type=LoadBalancer` : This pod is accessible from outside the cluster via a load balancer
+- `--port 8080`: will listen to the port 8080.
+- No service name so it will just the same name as Deployment   
+For listing service `Kubectl get svc`   
+#### Know the Load Balancer
+Load Balancer it self is not provided by the kubernetes itself. Instead It is provided by the cloud infrastructure. kubernetes can ask the cloud infrastructure to give the load Balancer and cloud will give the IP address of the load balancer.   
+
+![alt text](images/loadbal.png)   
+In picture would be like this.   
+
+Before provisioning load balancer let's see if the IP address is assigned.
+```sh
+$ kubectl get svc kiada
+NAME        TYPE          CLUSTER-IP    EXTERNAL-IP    PORT(S)         AGE kiada       LoadBalancer  10.19.243.17  35.246.179.22  8080:30838/TCP  82s
+```
+
+If you see the external IP means load balancer can now forward request.
+You can try to send request by using `curl`
+
+### 3.3.3 horizontally scalling the application
+Now the world can see your application. When the request is too high one pod might be not enough for the task.
+We need to have more resources. This can be done by using HPA magic. _Scaling out_.
+```sh
+$ kubectl scale deployment kiada --replicas=3 
+deployment.apps/kiada scaled
+```
+Now you told to make 3 of the replicas. Rest will be done inside the kubernetes and be your desired state.
+Kubernetes is able to do what you want by telling them your desired state without giving every single commands.
+
+Let's see if the deploy actually made
+```sh
+$ kubectl get deploy 
+NAME    READY   UP-TO-DATE   AVAILABLE   AGE kiada   3/3     3            3           18m
+```
+```sh
+$ kubectl get pods 
+NAME                    READY   STATUS    RESTARTS   AGE 
+kiada-9d785b578-58vhc   1/1     Running   0          17s 
+kiada-9d785b578-jmnj8   1/1     Running   0          17s 
+kiada-9d785b578-p449x   1/1     Running   0          18m 
+```
+As you see we now have 3 pods.   
+You can also use `$ kubectl get pods -o wide` to check the IP and additional information.
+
+Lastly we check which node they are working on. By using `curl`. You might notice that it is saying different pod. The load balancer is working it's magic and distributing the task randomly. let's look at the picture.
+
+![alt text](images/3withload.png)   
+
+At the end do not confuse the load balancer. It is provided by the cloud such as GKE.
+
+End of Chapter 3

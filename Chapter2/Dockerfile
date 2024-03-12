@@ -1,3 +1,4 @@
-FROM node:12
-ADD app.js /app.js
-ENTRYPOINT [ "node", "app.js" ]
+FROM node:16
+COPY app.js /app.js
+COPY html/ /html
+ENTRYPOINT ["node", "app.js"]
