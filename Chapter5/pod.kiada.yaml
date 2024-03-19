@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kiada
+  labels:
+    app: kiada
+spec:
+  containers:
+  - name: kiada
+    image: jinnkenny99/kiada:latest
+    ports:
+    - containerPort: 8080
