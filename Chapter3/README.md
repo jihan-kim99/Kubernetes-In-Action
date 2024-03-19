@@ -12,6 +12,7 @@ You can install k8s on laptop, organization infra, or virtual machine from cloud
 You can start by just using docker desktop to run a single node k8s. Easiest way to start.
 
 This is how the docker desktop runs kubernetes cluster.
+This is how the docker desktop runs kubernetes cluster.
 
 ![kub in docker desktop](images/DDkube.png)
 
@@ -168,8 +169,6 @@ get secret | sls admin-user | ForEach-Object { $_ -Split '\s+' } | Select -First
 ```
 
 ## 3.3 Running your first application on Kubernetes
-
-### 3.3.1 Running the first Kubernetes application
 
 Finally, We deploy something to cluster. Normally with JSON or YAML but now let's do in easy way.
 
