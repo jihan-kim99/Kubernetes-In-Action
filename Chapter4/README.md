@@ -1,6 +1,6 @@
 # Chapter 4 Kubernetes API objects
 
-### This chapter is about
+## This chapter is about
 
 - Using API to manage cluster and applications it hosts
 - Understanding API object structure
